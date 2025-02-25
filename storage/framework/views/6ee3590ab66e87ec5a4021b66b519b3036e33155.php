@@ -1,8 +1,8 @@
-@extends('admin.layouts.master')
+
 <?php
 use Illuminate\Support\Facades\File;
 ?>
-@section('contant')
+<?php $__env->startSection('contant'); ?>
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -11,19 +11,20 @@ use Illuminate\Support\Facades\File;
                     <h4 class="card-title">Category Edit</h4>
                 </div>
 
-                @if ($errors->any())
-                    @foreach ($errors->all() as $message)
+                <?php if($errors->any()): ?>
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error</strong> {{ $message }}
+                            <strong>Error</strong> <?php echo e($message); ?>
+
                             <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span
                                     aria-hidden="true">×</span></button>
                         </div>
-                    @endforeach
-                @endif
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
 
                 <form id="editCategory" class="forms-sample" method="POST"
-                    action="{{ route('category.update', $categories->id) }}" enctype="multipart/form-data">
-                    @csrf
+                    action="<?php echo e(route('category.update', $categories->id)); ?>" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group mb-5">
@@ -38,10 +39,10 @@ use Illuminate\Support\Facades\File;
         }
     }
                                                                                                                                                             ?>
-                                    <img src="{{ $profilePic }}" id="profile_image_cls" alt="img" width="100px"
+                                    <img src="<?php echo e($profilePic); ?>" id="profile_image_cls" alt="img" width="100px"
                                         height="100px">
                                     <div class="img-upload">
-                                        <input type="hidden" name="old_img" value="{{ $categories->image }}">
+                                        <input type="hidden" name="old_img" value="<?php echo e($categories->image); ?>">
                                         <input type="file" class="file h-none" name="image" id="profile-img">
                                         <label for="profile-img"><i class="icon-screen-desktop icon-camera"></i></label>
                                     </div>
@@ -52,20 +53,20 @@ use Illuminate\Support\Facades\File;
                             <div class="form-group">
                                 <label for="title">Title</label>
                                 <input type="text" class="form-control" id="title" name="title" placeholder="Title"
-                                    value="@if (isset($categories->title)) {{ $categories->title }} @endif">
-                                @if ($errors->has('title'))
-                                    <span class="text-danger">{{ $errors->first('title') }}</span>
-                                @endif
+                                    value="<?php if(isset($categories->title)): ?> <?php echo e($categories->title); ?> <?php endif; ?>">
+                                <?php if($errors->has('title')): ?>
+                                    <span class="text-danger"><?php echo e($errors->first('title')); ?></span>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <label for="title">&nbsp;</label>
                             <div class="form-group mb-0 mt-2 pt-1">
-                                <input type="checkbox" id="is_show" name="is_show" value="1" {{ isset($categories) && $categories->is_show == 1 ? 'checked' : '' }}>
+                                <input type="checkbox" id="is_show" name="is_show" value="1" <?php echo e(isset($categories) && $categories->is_show == 1 ? 'checked' : ''); ?>>
                                 <label for="name">Is Show</label>
                             </div>
                             <div class="form-group mb-0 mt-2 pt-1">
-                                <input type="checkbox" id="coming_soon" name="coming_soon" value="1" {{ isset($categories) && $categories->coming_soon == 1 ? 'checked' : '' }}>
+                                <input type="checkbox" id="coming_soon" name="coming_soon" value="1" <?php echo e(isset($categories) && $categories->coming_soon == 1 ? 'checked' : ''); ?>>
                                 <label for="name">Coming Soon</label>
                             </div>
                         </div>
@@ -81,36 +82,36 @@ use Illuminate\Support\Facades\File;
                             </div>
                         </div>
 
-                        @php
+                        <?php
                             $minValues = json_decode($categories->min_value, true) ?: explode(',', $categories->min_value);
                             $maxValues = json_decode($categories->max_value, true) ?: explode(',', $categories->max_value);
                             $deliveryCharges = json_decode($categories->delivery_charge, true) ?: explode(',', $categories->delivery_charge);
-                        @endphp
+                        ?>
 
                         <div class="col-md-12 mt-5">
                             <h3 class="mb-4">Your Delivery Charges:</h3>
                             <div id="delivery-charge-container" class="col-md-12">
-                                @foreach ($deliveryCharges as $index => $charge)
+                                <?php $__currentLoopData = $deliveryCharges; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $charge): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="row delivery-charge-row">
                                         <div class="col-md-3 col-6 pl-0">
                                             <div class="form-group">
                                                 <label for="min_value">Min Value</label>
                                                 <input type="text" class="form-control" name="min_value[]"
-                                                    placeholder="Set Min Range" required value="{{ $minValues[$index] }}">
+                                                    placeholder="Set Min Range" required value="<?php echo e($minValues[$index]); ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-6 pl-0">
                                             <div class="form-group">
                                                 <label for="max_value">Max Value</label>
                                                 <input type="text" class="form-control" name="max_value[]"
-                                                    placeholder="Set Max Range" required value="{{ $maxValues[$index] }}">
+                                                    placeholder="Set Max Range" required value="<?php echo e($maxValues[$index]); ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-6 pl-0">
                                             <div class="form-group">
                                                 <label for="delivery_charge">Delivery Charge</label>
                                                 <input type="text" class="form-control" name="delivery_charge[]"
-                                                    placeholder="Set Charges in Rs" required value="{{ $charge }}">
+                                                    placeholder="Set Charges in Rs" required value="<?php echo e($charge); ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-6 pl-0">
@@ -122,11 +123,11 @@ use Illuminate\Support\Facades\File;
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-12 d-flex pl-0">
+                        <div class="col-md-6 col-12 d-flex">
                             <button type="submit" class="btn btn-primary mr-2 ">Submit</button>
                             <a href="javascript:void(0);" class="btn btn-dark mr-2" id="add-row">
                                 <i class="fa fa-plus mr-2"></i>
@@ -286,7 +287,7 @@ use Illuminate\Support\Facades\File;
                 timeSelect.appendChild(option);
             });
 
-            const selectedTime = "{{ old('delivery_time', (isset($categories) && !empty($categories->delivery_time)) ? date('g:i A', strtotime($categories->delivery_time)) : '') }}";
+            const selectedTime = "<?php echo e(old('delivery_time', (isset($categories) && !empty($categories->delivery_time)) ? date('g:i A', strtotime($categories->delivery_time)) : '')); ?>";
             if (selectedTime) {
                 timeSelect.value = selectedTime;
             }
@@ -294,4 +295,5 @@ use Illuminate\Support\Facades\File;
 
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\priv\resources\views/admin/category/edit.blade.php ENDPATH**/ ?>

@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Session;
             $profilePic = asset(config('constants.profile_img_display_path')) . '/' . $user->profile;
         }
     }
-                                                                                        ?>
+                                                                                            ?>
                                     <img src="{{ $profilePic }}" id="profile_image_cls" alt="img" width="100px"
                                         height="100px">
                                     <div class="img-upload">
@@ -73,7 +73,7 @@ use Illuminate\Support\Facades\Session;
                             </div>
                         </div>
 
-                        <div class="col-md-12 mt-5 mb-4">
+                        <div class="col-md-6 mt-5 mb-4">
                             <h3 class="mb-4">Set Your Delivery Time:</h3>
                             <div class="form-group">
                                 <label for="delivery_time">Time</label>
@@ -87,46 +87,42 @@ use Illuminate\Support\Facades\Session;
                             <h3 class="mb-4">Set Your Delivery Charges:</h3>
                             <div id="delivery-charge-container" class="col-md-12">
                                 <div class="row delivery-charge-row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3 col-6 pl-0">
                                         <div class="form-group">
                                             <label for="min_value">Min Value</label>
                                             <input type="text" class="form-control numeric-input" name="min_value[]"
                                                 placeholder="Set Min Range" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3 col-6 pl-0">
                                         <div class="form-group">
                                             <label for="max_value">Max Value</label>
                                             <input type="text" class="form-control numeric-input" name="max_value[]"
                                                 placeholder="Set Max Range" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3 col-6 pl-0">
                                         <div class="form-group">
                                             <label for="delivery_charge">Delivery Charge</label>
                                             <input type="text" class="form-control numeric-input" name="delivery_charge[]"
                                                 placeholder="Set Charges in Rs" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3 col-6 pl-0">
                                         <div class="form-group flex-column d-flex">
                                             <label for="title">&nbsp;</label>
-                                            <a href="javascript:void(0);" class="btn btn-danger mr-2 remove-row"><i
-                                                    class="fa fa-minus mr-2"></i>Remove Row</a>
+                                            <a href="javascript:void(0);" style="width: fit-content"
+                                                class="btn btn-danger mr-2 remove-row"><i class="fa fa-trash mr-2"></i></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group flex-column d-flex">
-                                    <a href="javascript:void(0);" class="btn btn-dark mr-2" id="add-row"><i
-                                            class="fa fa-plus mr-2"></i>Add New Category Charge Row</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-12 d-flex pl-0">
                         <button type="submit" class="btn btn-primary mr-2 ">Submit</button>
+                        <a href="javascript:void(0);" class="btn btn-dark mr-2" id="add-row"><i
+                                class="fa fa-plus mr-2"></i></a>
                     </div>
                 </form>
             </div>
@@ -329,6 +325,6 @@ use Illuminate\Support\Facades\Session;
             });
         });
 
-        //////////////////// Deliever Time ////////////////
+        //////////////// Deliever Time //////////////////////////////
     </script>
 @endsection

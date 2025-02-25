@@ -32,11 +32,11 @@
                 <table class="table table-striped" id="table">
                     <thead>
                         <tr>
-                            <th width="20%">S.No.</th>
-                            <th width="20%">Image</th>
-                            <th width="20%">Title</th>
-                            <th width="20%">Active/Inactive</th>
-                            <th width="20%">Action</th>
+                            <th>S.No.</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Active/Inactive</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="sortable">
@@ -44,15 +44,16 @@
                                         @php $i = ($categories->currentPage() - 1) * $categories->perPage() + 1; @endphp
                                         @foreach($categories as $key => $make)
                                                         <tr data-id="{{$make->id}}">
-
-                                                            <td>{{ $i++ }}<i class="fas fa-grip-vertical ml-3 text-muted table-grip-icon"></i></td>
+                                                            <div class="d-flex align-items-center">
+                                                                <td>{{ $i++ }}<i class="fas fa-grip-vertical ml-3 text-muted table-grip-icon"></i></td>
+                                                            </div>
                                                             <td class="py-1">
                                                                 <?php
                                             $link = asset(config('constants.default_image'));
                                             if (!empty($make->image)) {
                                                 $link = asset('storage/category/' . $make->image);
                                             }
-                                                                                                                                                                                                                                                                                        ?>
+                                                                                                                                                                                                                                                                                                                            ?>
                                                                 <img class="category" src="{{ $link }}" alt="make logo">
                                                             </td>
                                                             <td>{{ ucfirst($make->title) }}</td>

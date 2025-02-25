@@ -34,12 +34,12 @@
             <table class="table table-striped" id="table">
                 <thead>
                     <tr>
-                        <th width="15%">S.No.</th>
-                        <th width="20%">Image</th>
-                        <th width="20%">Category</th>
-                        <th width="20%">Subcategory</th>
-                        <th width="15%">Active/Inactive</th>
-                        <th width="30%">Action</th>
+                        <th>S.No.</th>
+                        <th>Image</th>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Active/Inactive</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="sortable">
@@ -48,9 +48,10 @@
                     <?php $__currentLoopData = $subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $make): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr id="<?php echo e($make->id); ?>">
                         <td>
-                            <?php echo e($i++); ?>
+                            <div class="d-flex align-items-center"> <?php echo e($i++); ?>
 
-                            <i class="fas fa-grip-vertical ml-3 text-muted table-grip-icon"></i>
+                                <i class="fas fa-grip-vertical ml-3 text-muted table-grip-icon"></i></div>
+                           
                         </td>
                         <td class="py-1">
                             <?php
