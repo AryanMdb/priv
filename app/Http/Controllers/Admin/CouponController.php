@@ -36,7 +36,6 @@ class CouponController extends Controller
 
         $coupon = Coupon::orderBy('id', 'desc')->paginate($entries);
         $categories = Category::active()->get();
-
         return view('admin.coupon.index', compact('coupon', 'categories'));
     }
 

@@ -127,7 +127,7 @@ use Illuminate\Support\Facades\File;
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-12 d-flex">
+                        <div class="col-md-6 col-12 d-flex pl-0">
                             <button type="submit" class="btn btn-primary mr-2 ">Submit</button>
                             <a href="javascript:void(0);" class="btn btn-dark mr-2" id="add-row">
                                 <i class="fa fa-plus mr-2"></i>
