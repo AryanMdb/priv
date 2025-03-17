@@ -110,6 +110,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
     Route::get('/users/edit/{id}', [UsersController::class, 'edit'])->name('user.edit');
     Route::post('/users/update/{id}', [UsersController::class, 'update'])->name('user.update');
     Route::post('/users/update-password/{id}', [UsersController::class, 'updatePassword'])->name('user.update.password');
+    Route::get('/users/export', [UsersController::class, 'getUserData'])->name('export.users');
     Route::any('/users/destroy/{id}', [UsersController::class, 'destroy'])->name('user.destroy');
     Route::post('/users/switch/toggle', [UsersController::class, 'switchToggle'])->name('user.switch.toggle');
     Route::post('/book/switch/toggle', [UsersController::class, 'switchToggleBook'])->name('book.switch.toggle');

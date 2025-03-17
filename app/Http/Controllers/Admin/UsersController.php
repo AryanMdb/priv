@@ -11,6 +11,8 @@ use App\CustomHelper\Helpers;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\UserExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\File;
@@ -318,4 +320,10 @@ class UsersController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function getUserData()
+    {
+        return Excel::download(new UserExport, 'users.xlsx');
+    }
+    
 }

@@ -45,6 +45,8 @@ use Illuminate\Support\Facades\Config;
                     </form>
                     <a class="bl_btn align-items-center d-flex justify-content-center mb-0 mx-0 w-100"
                         href="<?php echo e(route('user.create')); ?>">Add New User</a>
+                    <a class="bl_btn align-items-center d-flex justify-content-center mb-0 mx-0 w-100 ml-2"
+                        href="<?php echo e(route('export.users')); ?>">Download Excel</a>
                 </div>
             </div>
 
