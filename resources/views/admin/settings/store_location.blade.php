@@ -1,7 +1,5 @@
 @extends('admin.layouts.master')
-<?php
-use Illuminate\Support\Facades\Session;
-?>
+<?php use Illuminate\Support\Facades\Session; ?>
 @section('contant')
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
@@ -10,6 +8,7 @@ use Illuminate\Support\Facades\Session;
                 <div class="w-100 align-items-center justify-content-between mb-4 d-flex">
                     <h4 class="card-title">Privykart Store Location</h4>
                 </div>
+
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Success</strong> {{ $message }}
@@ -24,6 +23,7 @@ use Illuminate\Support\Facades\Session;
                     @csrf
                     @method('PUT')
                     <div class="row">
+                        <!-- Latitude -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="latitude">Latitude</label>
@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Session;
                                     value="{{ old('latitude', $store_location->latitude) }}">
                             </div>
                         </div>
+                        <!-- Longitude -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="longitude">Longitude</label>
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\Session;
                                     placeholder="Longitude" value="{{ old('longitude', $store_location->longitude) }}">
                             </div>
                         </div>
+                        <!-- Delivery Radius -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="delivery_radius">Delivery Radius/Distance</label>
@@ -47,37 +49,40 @@ use Illuminate\Support\Facades\Session;
                             </div>
                         </div>
 
+                        <!-- Distance-Wise Charges Title -->
                         <div class="col-md-12 mb-4">
                             <h4 class="card-title">Distance Wise Charge</h4>
                         </div>
 
+                        <!-- Existing distance rows -->
                         @php
                             $distances = json_decode($store_location->distance, true) ?: explode(',', $store_location->distance);
                             $charges = json_decode($store_location->distance_charge, true) ?: explode(',', $store_location->distance_charge);
                         @endphp
 
-                        <!-- Loop through the distance and charge data -->
                         <div class="col-md-12" id="distance-rows">
                             @foreach ($distances as $index => $distance)
                                 <div class="row distance-row">
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="distance">Distance Value in km</label>
-                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')" type="text" class="form-control distance number_value" name="distance[]"
+                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')"
+                                                type="text" class="form-control distance number_value" name="distance[]"
                                                 placeholder="Distance in Km" value="{{ old('distance.' . $index, $distance) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="charge">Distance Charge in Rs</label>
-                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')" type="text" class="form-control charge number_value" name="distance_charge[]"
+                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')"
+                                                type="text" class="form-control charge number_value" name="distance_charge[]"
                                                 placeholder="Distance Charge"
                                                 value="{{ old('distance_charge.' . $index, $charges[$index] ?? '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-1">
                                         <label for="">&nbsp;</label>
-                                        <div class="form-group flex-column d-flex ">
+                                        <div class="form-group d-flex flex-column">
                                             <button type="button" class="btn btn-danger remove-row">
                                                 <i class="fa fa-trash"></i>
                                             </button>
@@ -87,14 +92,16 @@ use Illuminate\Support\Facades\Session;
                             @endforeach
                         </div>
 
+                        <!-- Add New Distance Button -->
                         <div class="col-md-3">
-                            <div class="form-group flex-column d-flex">
+                            <div class="form-group d-flex flex-column">
                                 <button type="button" class="btn btn-dark" id="add-row">
                                     <i class="fa fa-plus"></i> Add New Distance Row
                                 </button>
                             </div>
                         </div>
 
+                        <!-- Submit Button -->
                         <div class="col-md-8">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
@@ -105,119 +112,177 @@ use Illuminate\Support\Facades\Session;
         </div>
     </div>
 
+    <!-- JS Logic -->
     <script>
         $(document).ready(function () {
-            let distanceRowTemplate = `
-                <div class="row distance-row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="distance">Distance Value in km</label>
-                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')" type="text" class="form-control distance number_value" name="distance[]" placeholder="Distance in Km">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="charge">Distance Charge in Rs</label>
-                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')" type="text" class="form-control charge number_value" name="distance_charge[]" placeholder="Distance Charge">
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                        <label for="">&nbsp;</label>
-                        <div class="form-group flex-column d-flex">
-                            <button type="button" class="btn btn-danger remove-row">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            const distanceRowTemplate = `
+                                        <div class="row distance-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="distance">Distance Value in km</label>
+                                                    <input inputmode="numeric" oninput="this.value = this.value.replace(/\\D+/g, '')"
+                                                        type="text" class="form-control distance number_value" name="distance[]" placeholder="Distance in Km">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="charge">Distance Charge in Rs</label>
+                                                    <input inputmode="numeric" oninput="this.value = this.value.replace(/\\D+/g, '')"
+                                                        type="text" class="form-control charge number_value" name="distance_charge[]" placeholder="Distance Charge">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <label for="">&nbsp;</label>
+                                                <div class="form-group d-flex flex-column">
+                                                    <button type="button" class="btn btn-danger remove-row">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
 
             function toggleDeleteButton() {
-                if ($('.distance-row').length === 1) {
-                    $('.remove-row').prop('disabled', true).addClass('disabled');
-                } else {
-                    $('.remove-row').prop('disabled', false).removeClass('disabled');
-                }
+                $('.remove-row').prop('disabled', $('.distance-row').length === 1)
+                    .toggleClass('disabled', $('.distance-row').length === 1);
             }
 
-            // Add row
             $('#add-row').on('click', function () {
-                $('#distance-rows').append(distanceRowTemplate);
-                toggleDeleteButton(); // Update button state
+                let $newRow = $(distanceRowTemplate);
+                $('#distance-rows').append($newRow);
+
+                // Validate the new inputs manually
+                let deliveryRadius = getDeliveryRadius();
+
+                let $distanceInput = $newRow.find("input[name='distance[]']");
+                let $chargeInput = $newRow.find("input[name='distance_charge[]']");
+
+                // Manually add rules for the new inputs
+                $distanceInput.rules("add", {
+                    required: true,
+                    min: deliveryRadius || 1,
+                    messages: {
+                        required: "Please enter a distance value",
+                        min: "Distance should be at least " + (deliveryRadius || 1) + " km"
+                    }
+                });
+
+                $chargeInput.rules("add", {
+                    required: true,
+                    min: 1,
+                    messages: {
+                        required: "Please enter a charge value",
+                        min: "Charge must be greater than 0"
+                    }
+                });
+
+                // Trigger validation (optional)
+                $("#addStoreLocation").validate().element($distanceInput);
+                $("#addStoreLocation").validate().element($chargeInput);
+                $("#addStoreLocation").validate().settings.ignore = "";
+                $("#addStoreLocation").validate().element($distanceInput);
+
+
+                toggleDeleteButton(); // Update remove button state
             });
 
-            // Remove row
+
             $(document).on('click', '.remove-row', function () {
                 if ($('.distance-row').length > 1) {
                     $(this).closest('.distance-row').remove();
-                    toggleDeleteButton(); // Update button state
+                    toggleDeleteButton();
                 }
             });
 
-            // If no rows exist, add a default row
             if ($('.distance-row').length === 0) {
                 $('#distance-rows').append(distanceRowTemplate);
             }
 
             toggleDeleteButton();
 
+            function getDeliveryRadius() {
+                return parseFloat($('#delivery_radius').val()) || 0;
+            }
+
             $('#addStoreLocation').validate({
                 highlight: function (element) {
-                    $(element).closest('.form-control').addClass('is-invalid');
+                    $(element).addClass('is-invalid');
                 },
                 unhighlight: function (element) {
-                    $(element).closest('.form-control').removeClass('is-invalid');
+                    $(element).removeClass('is-invalid');
                 },
                 rules: {
-                    latitude: {
-                        required: true,
-                        maxlength: 11
-                    },
-                    longitude: {
-                        required: true,
-                        maxlength: 11
-                    },
-                    delivery_radius: {
-                        required: true,
-                        maxlength: 11
-                    },
+                    latitude: { required: true, maxlength: 11 },
+                    longitude: { required: true, maxlength: 11 },
+                    delivery_radius: { required: true, maxlength: 11 },
                     "distance[]": {
-                        min: 8
+                        required: true,
+                        min: () => parseFloat($("#delivery_radius").val()) || 1
                     },
+                    "distance_charge[]": {
+                        required: true,
+                        min: 1
+                    }
                 },
                 messages: {
-                    latitude: {
-                        required: 'Please enter latitude',
-                    },
-                    longitude: {
-                        required: "Please enter longitude",
-                    },
-                    delivery_radius: {
-                        required: "Please enter delivery radius",
-                    },
+                    latitude: { required: 'Please enter latitude' },
+                    longitude: { required: 'Please enter longitude' },
+                    delivery_radius: { required: 'Please enter delivery radius' },
                     "distance[]": {
-                        min: "Distance should be at least 8 km"
+                        required: "Please enter a distance value",
+                        min: () => "Distance should be at least " + $("#delivery_radius").val() + " km"
                     },
+                    "distance_charge[]": {
+                        required: "Please enter a charge value",
+                        min: "Charge must be greater than 0"
+                    }
                 },
-
                 submitHandler: function (form) {
-                    let valid = true;
+                    // First validate the entire form
+                    if (!$(form).valid()) {
+                        return false;
+                    }
 
+                    let deliveryRadius = getDeliveryRadius();
+                    let isValid = true;
 
                     $("input[name='distance[]']").each(function () {
-                        if ($(this).val() && $(this).val() < 8) {
-                            valid = false;
+                        let val = parseFloat($(this).val()) || 0;
+                        if ($(this).val() === "" || val < deliveryRadius) {
+                            isValid = false;
                             $(this).addClass('is-invalid');
-                            $(this).closest('.form-control').addClass('is-invalid');
-                            return false;
+                        } else {
+                            $(this).removeClass('is-invalid');
                         }
                     });
 
-                    if (valid) {
-                        form.submit();
-                    }
+                    $("input[name='distance_charge[]']").each(function () {
+                        let val = parseFloat($(this).val()) || 0;
+                        if ($(this).val() === "" || val <= 0) {
+                            isValid = false;
+                            $(this).addClass('is-invalid');
+                        } else {
+                            $(this).removeClass('is-invalid');
+                        }
+                    });
+
+                    return isValid;
                 }
 
+
+
+            });
+
+            $(document).on('input', "input[name='distance[]']", function () {
+                const val = parseFloat($(this).val()) || 0;
+                const min = getDeliveryRadius();
+                $(this).toggleClass('is-invalid', val < min).closest('.form-control').toggleClass('is-invalid', val < min);
+            });
+
+            $(document).on('input', "input[name='distance_charge[]']", function () {
+                const val = parseFloat($(this).val()) || 0;
+                const min = 0;
+                $(this).toggleClass('is-invalid', val <= 0).closest('.form-control').toggleClass('is-invalid', val <= 0);
             });
         });
     </script>

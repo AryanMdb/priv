@@ -55,6 +55,7 @@
                                                             <th>Phone Number</th>
                                                             <td>{{ $order->phone_no }}</td>
                                                         </tr>
+                                                       
                                                         @if($address != '')
                                                         <tr>
                                                             <th>Location</th>
@@ -234,6 +235,16 @@
                                                         <tr>
                                                             <th>Distance Charges</th>
                                                             <td>₹{{ $order?->cart?->distance_charge}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Discount</th>
+                                                            <td>
+                                                                @if($order->cart->discount > 0)
+                                                                        ₹{{ $order->cart->discount }}
+                                                                    @else
+                                                                <span>No Discount</span>    
+                                                                @endif
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <th>Grand Total</th>

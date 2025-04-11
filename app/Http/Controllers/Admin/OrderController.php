@@ -25,12 +25,12 @@ class OrderController extends Controller
     {
         $this->googleMapsService = $googleMapsService;
     }
-    public function index(request $request)
+    public function index(Request $request)
     {
         try {
             $allowed = [10, 25, 50, 100];
             $input = (int) $request->input('entries', 10);
-
+    
             if (!in_array($input, $allowed)) {
                 $closest = null;
                 $minDiff = PHP_INT_MAX;
@@ -47,16 +47,30 @@ class OrderController extends Controller
             } else {
                 $entries = $input;
             }
-
+    
             $roles = Role::all();
-            $orders = Order::with('cart', 'user')->latest()->paginate($entries);
-
+            $query = Order::with('cart', 'user')->latest();
+    
+            // Apply search filter
+            if ($request->has('search') && !empty($request->input('search'))) {
+                $search = $request->input('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('order_id', 'LIKE', "%{$search}%") // Search by order_id
+                      ->orWhereHas('user', function ($q) use ($search) { // Search by user's name
+                          $q->where('name', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+    
+            $orders = $query->paginate($entries);
             $carts = Cart::where('status', 1)->get();
+    
             return view('admin.orders.index', compact('orders', 'roles', 'carts'));
         } catch (Exception $e) {
             return $e->getMessage();
         }
     }
+    
 
     public function show($id)
     {
@@ -182,11 +196,34 @@ class OrderController extends Controller
                 $entries = $input;
             }
 
-            $roles = Role::all();
-            $orders = Order::with('cart', 'user')->onlyTrashed()->latest()->paginate($entries);
+            // $roles = Role::all();
+            // $orders = Order::with('cart', 'user')->onlyTrashed()->latest()->paginate($entries);
 
+            // $carts = Cart::where('status', 1)->get();
+            // return view('admin.orders.index', compact('orders', 'roles', 'carts'))->with('tab', 'trashed');
+
+            // ////////////////////////////////////
+
+
+            $roles = Role::all();
+            $query = Order::with('cart', 'user')->onlyTrashed()->latest();
+    
+            if ($request->has('search') && !empty($request->input('search'))) {
+                $search = $request->input('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('order_id', 'LIKE', "%{$search}%") // Search by order_id
+                      ->orWhereHas('user', function ($q) use ($search) { // Search by user's name
+                          $q->where('name', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+    
+            $orders = $query->paginate($entries);
             $carts = Cart::where('status', 1)->get();
-            return view('admin.orders.index', compact('orders', 'roles', 'carts'))->with('tab', 'trashed');
+    
+            return view('admin.orders.index', compact('orders', 'roles', 'carts'));
+
+            // /////////////////////////////////////////
         } catch (Exception $e) {
             return $e->getMessage();
         }

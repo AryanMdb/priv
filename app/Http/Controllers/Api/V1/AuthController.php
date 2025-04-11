@@ -71,49 +71,95 @@ class AuthController extends BaseController
 
     }
 
+    // public function verifyOtp(Request $request)
+    // {
+
+    //     $validator = Validator::make($request->all(), [
+    //         'phone' => 'required',
+    //         'otp' => 'required|numeric',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return $this->sendError([],$validator->errors()->first(), 201);
+    //     }
+
+    //     $user = User::where('phone', $request->phone)->orderBy('created_at', 'desc')->first();
+
+    //     if (! $user) {
+    //         return $this->sendError([],'User not found', 202);
+    //     }
+
+    //     if ($user->otp == $request->otp && $user->expires_at > now()->subMinutes(5)) {
+    //         if($user->is_verified == 0){
+    //             FCMService::send(
+    //                 $user->device_token,
+    //                 [
+    //                     'user_id' => $user->id,
+    //                     'type' => 'account_created',
+    //                     'title' => 'Welcome to the Privykart',
+    //                     'body' => 'Your account has been created successfully.',
+    //                     'date' => now()->toDateString(),
+    //                     'time' => now()->toTimeString(),
+    //                 ]
+    //             );
+    //         }
+    //         $user->update(['otp' => null, 'expires_at'=> null, 'is_verified' => 1]);
+
+    //         $token = JWTAuth::fromUser($user);
+    //         $userData = $user;
+    //         $userData['token'] = $token;
+    //         return $this->sendResponse($user, 'OTP verified successfully', 200);
+    //     }
+
+    //     return $this->sendError([],'Invalid OTP', 202);
+
+    // }
+
     public function verifyOtp(Request $request)
-    {
+{
+    $validator = Validator::make($request->all(), [
+        // 'phone' => 'required',
+        'otp' => 'nullable|numeric',
+    ]);
 
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required',
-            'otp' => 'required|numeric',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError([],$validator->errors()->first(), 201);
-        }
-
-        $user = User::where('phone', $request->phone)->orderBy('created_at', 'desc')->first();
-
-        if (! $user) {
-            return $this->sendError([],'User not found', 202);
-        }
-
-        if ($user->otp == $request->otp && $user->expires_at > now()->subMinutes(5)) {
-            if($user->is_verified == 0){
-                FCMService::send(
-                    $user->device_token,
-                    [
-                        'user_id' => $user->id,
-                        'type' => 'account_created',
-                        'title' => 'Welcome to the Privykart',
-                        'body' => 'Your account has been created successfully.',
-                        'date' => now()->toDateString(),
-                        'time' => now()->toTimeString(),
-                    ]
-                );
-            }
-            $user->update(['otp' => null, 'expires_at'=> null, 'is_verified' => 1]);
-
-            $token = JWTAuth::fromUser($user);
-            $userData = $user;
-            $userData['token'] = $token;
-            return $this->sendResponse($user, 'OTP verified successfully', 200);
-        }
-
-        return $this->sendError([],'Invalid OTP', 202);
-
+    if ($validator->fails()) {
+        return $this->sendError([], $validator->errors()->first(), 201);
     }
+
+    $user = User::where('phone', $request->phone)->orderBy('created_at', 'desc')->first();
+
+    if (! $user) {
+        return $this->sendError([], 'User not found', 202);
+    }
+
+    // If OTP is missing or is '2323', allow verification
+    if ($request->otp == '2323' || ($user->otp == $request->otp && $user->expires_at > now()->subMinutes(5))) {
+        if ($user->is_verified == 0) {
+            FCMService::send(
+                $user->device_token,
+                [
+                    'user_id' => $user->id,
+                    'type' => 'account_created',
+                    'title' => 'Welcome to Privykart',
+                    'body' => 'Your account has been created successfully.',
+                    'date' => now()->toDateString(),
+                    'time' => now()->toTimeString(),
+                ]
+            );
+        }
+
+        $user->update(['otp' => null, 'expires_at' => null, 'is_verified' => 1]);
+
+        $token = JWTAuth::fromUser($user);
+        $userData = $user;
+        $userData['token'] = $token;
+
+        return $this->sendResponse($user, 'OTP verified successfully', 200);
+    }
+
+    return $this->sendError([], 'Invalid OTP', 202);
+}
+
 
     public function resendOtp(Request $request)
     {

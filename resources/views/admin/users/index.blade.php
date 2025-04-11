@@ -31,22 +31,32 @@ use Illuminate\Support\Facades\Config;
     <div class="card col-12">
         <div class="card-body">
             <div class="w-100 align-items-center justify-content-between mb-4 d-flex row">
-                <div class="col-md-7 col-12">
+                <div class="col-md-2 col-12">
                     <h4 class="card-title">USERS TABLE</h4>
                 </div>
-                <div class=" col-md-5 col-12 my-3 d-flex">
-                    <form class="mr-3 w-100" method="GET" action="{{ route('user.index') }}">
-                        <select name="entries" class="form-control w-100" onchange="this.form.submit()">
-                            <option value="10" {{ request('entries', 10) == 10 ? 'selected' : '' }}>10</option>
-                            <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ request('entries') == 50 ? 'selected' : '' }}>50</option>
-                            <option value="100" {{ request('entries') == 100 ? 'selected' : '' }}>100</option>
-                        </select>
-                    </form>
-                    <a class="bl_btn align-items-center d-flex justify-content-center mb-0 mx-0 w-100"
-                        href="{{ route('user.create') }}">Add New User</a>
-                    <a class="bl_btn align-items-center d-flex justify-content-center mb-0 mx-0 w-100 ml-2"
-                        href="{{ route('export.users') }}">Download Excel</a>
+                <div class="col-xl-7 col-md-12 col-12 w-100 d-flex justify-content-end mt-3">
+                    <div class="d-flex w-100">
+                        <form class="w-100 mr-1" method="GET" action="{{ route('user.index') }}" id="searchForm">
+                            <input class="form-control" type="search" name="search" id="search" placeholder="Search Users"
+                                value="{{ request('search') }}">
+                            <input type="hidden" name="entries" value="{{ request('entries', 10) }}">
+                        </form>
+
+                        <form class="mr-3 w-100" method="GET" action="{{ route('user.index') }}">
+                            <input type="hidden" name="search" value="{{ request('search') }}">
+
+                            <select name="entries" class="form-control w-100" onchange="this.form.submit()">
+                                <option value="10" {{ request('entries', 10) == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('entries') == 50 ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request('entries') == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                        </form>
+                        <a class="bl_btn align-items-center d-flex justify-content-center mb-0 mx-0 w-100"
+                            href="{{ route('user.create') }}">Add New User</a>
+                            <a class="bl_btn align-items-center d-flex justify-content-center mb-0 mx-0 w-100 ml-2"
+                            href="{{ route('export.users') }}">Download Excel</a> 
+                    </div>
                 </div>
             </div>
 
@@ -178,6 +188,15 @@ use Illuminate\Support\Facades\Config;
                 ordering: false,
                 searching: false
             });
+        });
+
+
+        // ///////////// SEARCH OPTION /////////////////////////
+        document.getElementById('search').addEventListener('input', function () {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                document.getElementById('searchForm').submit();
+            }, 800);
         });
 
     </script>

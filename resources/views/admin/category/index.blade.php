@@ -32,11 +32,11 @@
                 <table class="table table-striped" id="table">
                     <thead>
                         <tr>
-                            <th>S.No.</th>
-                            <th>Image</th>
-                            <th>Title</th>
-                            <th>Active/Inactive</th>
-                            <th>Action</th>
+                            <th >S.No.</th>
+                            <th >Image</th>
+                            <th >Title</th>
+                            <th >Active/Inactive</th>
+                            <th >Action</th>
                         </tr>
                     </thead>
                     <tbody id="sortable">
@@ -53,7 +53,7 @@
                                             if (!empty($make->image)) {
                                                 $link = asset('storage/category/' . $make->image);
                                             }
-                                                                                                                                                                                                                                                                                                                            ?>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ?>
                                                                 <img class="category" src="{{ $link }}" alt="make logo">
                                                             </td>
                                                             <td>{{ ucfirst($make->title) }}</td>

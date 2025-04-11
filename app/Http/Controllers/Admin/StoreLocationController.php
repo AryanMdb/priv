@@ -26,8 +26,8 @@ class StoreLocationController extends Controller
                     'latitude' => $request->latitude,
                     'longitude' => $request->longitude,
                     'delivery_radius' => $request->delivery_radius,
-                    'distance' => json_encode($request->distance) ?? null,
-                    'distance_charge' => json_encode($request->distance_charge ?? null),
+                    'distance' => json_encode($request->distance) ?? 0,
+                    'distance_charge' => json_encode($request->distance_charge ?? 0),
                 ]
             );
 

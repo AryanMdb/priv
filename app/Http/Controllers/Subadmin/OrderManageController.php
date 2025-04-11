@@ -10,6 +10,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Services\GoogleMapsService;
 use App\Exports\SubadminOrderExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Location;
 
 class OrderManageController extends Controller
 {
@@ -56,10 +57,11 @@ class OrderManageController extends Controller
         try {
             if (isset($id)) {
                 $order = Order::with('cart', 'user')->find($id);
-                $latitude = $order->latitude ?? '';
-                $longitude = $order->longitude ?? '';
-                $address = $this->googleMapsService->getAddressFromCoordinates($latitude, $longitude);
-
+                $cart = $order->cart ?? null;
+                $location = $cart ? Location::find($cart->location_id) : null;
+                $latitude = $location->latitude ?? '';
+                $longitude = $location->longitude ?? '';
+                $address = $location ? $this->googleMapsService->getAddressFromCoordinates($latitude, $longitude) : '';
                 $address_to_latitude = $order->address_to_latitude ?? '';
                 $address_to_longitude = $order->address_to_longitude ?? '';
                 $address_to = $this->googleMapsService->getAddressFromCoordinates($address_to_latitude, $address_to_longitude);

@@ -33,6 +33,36 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index(Request $request)
+    // {
+    //     $allowed = [10, 25, 50, 100];
+    //     $input = (int) $request->input('entries', 10);
+
+    //     if (!in_array($input, $allowed)) {
+    //         $closest = null;
+    //         $minDiff = PHP_INT_MAX;
+    //         foreach ($allowed as $value) {
+    //             $diff = abs($value - $input);
+    //             if ($diff < $minDiff) {
+    //                 $minDiff = $diff;
+    //                 $closest = $value;
+    //             } elseif ($diff == $minDiff && $value > $closest) {
+    //                 $closest = $value;
+    //             }
+    //         }
+    //         $entries = $closest;
+    //     } else {
+    //         $entries = $input;
+    //     }
+
+    //     $users = User::where([
+    //         'role' => 'customer',
+    //         'is_verified' => 1
+    //     ])->orderBy('id', 'DESC')->paginate($entries);
+
+    //     return view('admin.users.index', compact('users'));
+    // }
+
     public function index(Request $request)
     {
         $allowed = [10, 25, 50, 100];
@@ -55,13 +85,25 @@ class UsersController extends Controller
             $entries = $input;
         }
 
-        $users = User::where([
+        $query = User::where([
             'role' => 'customer',
             'is_verified' => 1
-        ])->orderBy('id', 'DESC')->paginate($entries);
+        ]);
+
+        // Apply search filter
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%"); // Search by phone
+            });
+        }
+
+        $users = $query->orderBy('id', 'DESC')->paginate($entries);
 
         return view('admin.users.index', compact('users'));
     }
+
 
 
     /**
@@ -325,5 +367,4 @@ class UsersController extends Controller
     {
         return Excel::download(new UserExport, 'users.xlsx');
     }
-    
 }

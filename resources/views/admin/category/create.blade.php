@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Session;
             $profilePic = asset(config('constants.profile_img_display_path')) . '/' . $user->profile;
         }
     }
-                                                                                            ?>
+                                                                                        ?>
                                     <img src="{{ $profilePic }}" id="profile_image_cls" alt="img" width="100px"
                                         height="100px">
                                     <div class="img-upload">
@@ -111,8 +111,8 @@ use Illuminate\Support\Facades\Session;
                                     <div class="col-md-3 col-6 pl-0">
                                         <div class="form-group flex-column d-flex">
                                             <label for="title">&nbsp;</label>
-                                            <a href="javascript:void(0);" style="width: fit-content"
-                                                class="btn btn-danger mr-2 remove-row"><i class="fa fa-trash mr-2"></i></a>
+                                            <a href="javascript:void(0);" style="width: fit-content" class="btn btn-danger mr-2 remove-row"><i
+                                                    class="fa fa-trash mr-2"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@ use Illuminate\Support\Facades\Session;
                     <div class="col-md-6 col-12 d-flex pl-0">
                         <button type="submit" class="btn btn-primary mr-2 ">Submit</button>
                         <a href="javascript:void(0);" class="btn btn-dark mr-2" id="add-row"><i
-                                class="fa fa-plus mr-2"></i></a>
+                            class="fa fa-plus mr-2"></i></a>
                     </div>
                 </form>
             </div>
@@ -325,6 +325,6 @@ use Illuminate\Support\Facades\Session;
             });
         });
 
-        //////////////// Deliever Time //////////////////////////////
+        //////////////////// Deliever Time ////////////////
     </script>
 @endsection

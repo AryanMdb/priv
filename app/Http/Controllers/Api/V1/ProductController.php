@@ -183,7 +183,7 @@ class ProductController extends BaseController
 
             $category_charges = Category::find($product->category_id);
 
-            if ($category_charges->delivery_charge !== null) {
+            if ($category_charges->delivery_charge !== 0) {
                 $min_values = json_decode($category_charges->min_value);
                 $max_values = json_decode($category_charges->max_value);
                 $delivery_charges = json_decode($category_charges->delivery_charge);
@@ -305,6 +305,69 @@ class ProductController extends BaseController
         }
     }
 
+    // public function getAddToCartProducts($location_id = null, $distance = null)
+    // {
+
+    //     try {
+
+    //         $add_to_cart = Cart::with('cartItems')->where(['user_id' => auth()->user()->id, 'status' => '0'])->first();
+
+    //         if (is_null($add_to_cart)) {
+    //             return $this->sendResponse([], 'Cart is empty', 200);
+    //         }
+
+    //         $store_location = StoreLocation::first();
+
+    //         if (!$store_location) {
+    //             return $this->sendError([], 'Store location not found', 404);
+    //         }
+    //         if ($location_id && $distance != null) {
+    //             $distance_ranges = json_decode($store_location->distance);
+
+    //             $charge_ranges = json_decode($store_location->distance_charge);
+    //             $charge = 0;
+    //             if ($distance_ranges && $charge_ranges != 0)
+    //                 for ($i = 0; $i < count($distance_ranges) - 1; $i++) {
+    //                     if ($distance >= $distance_ranges[$i] && $distance < $distance_ranges[$i + 1]) {
+    //                         $charge = $charge_ranges[$i];
+    //                         break;
+    //                     }
+    //                 }
+    //             if ($charge === 0 && $distance >= $distance_ranges[count($distance_ranges) - 1]) {
+    //                 $charge = $charge_ranges[count($charge_ranges) - 1];
+    //             }
+    //         } else {
+    //             $charge = 0;
+    //             $distance = 0;
+    //             $location_id = 0;
+    //         }
+    //         $coupon = null;
+
+    //         $grant_total = $add_to_cart->total_price + $charge + $add_to_cart->deliver_charges - $add_to_cart->discount;
+
+    //         $add_to_cart->update([
+    //             'location_id' => (int) $location_id,
+    //             'distance' => $distance,
+    //             'grant_total' => $grant_total,
+    //             'distance_charge' => $charge ?? 0,
+    //         ]);
+
+    //         if ($location_id && $distance == null) {
+    //             Location::where('user_id', auth()->user()->id)->update(['default_address' => 0]);
+    //             Location::where('id', $location_id)->update(['default_address' => 0]);
+    //         } else {
+    //             Location::where('user_id', auth()->user()->id)->update(['default_address' => 0]);
+    //             Location::where('id', $location_id)->update(['default_address' => 1]);
+    //         }
+
+    //         return $this->sendResponse(new CartResource($add_to_cart), 'Add to cart list', 200);
+
+
+    //     } catch (\Exception $e) {
+    //         return $this->sendError([], $e->getMessage(), 500);
+    //     }
+    // }
+
     public function getAddToCartProducts($location_id = null, $distance = null)
     {
 
@@ -317,7 +380,7 @@ class ProductController extends BaseController
             }
 
             $store_location = StoreLocation::first();
-
+            $delivery_radius = $store_location->delivery_radius;
             if (!$store_location) {
                 return $this->sendError([], 'Store location not found', 404);
             }
@@ -326,16 +389,32 @@ class ProductController extends BaseController
 
                 $charge_ranges = json_decode($store_location->distance_charge);
                 $charge = 0;
-                if ($distance_ranges && $charge_ranges !== null)
-                    for ($i = 0; $i < count($distance_ranges) - 1; $i++) {
-                        if ($distance >= $distance_ranges[$i] && $distance < $distance_ranges[$i + 1]) {
-                            $charge = $charge_ranges[$i];
-                            break;
+
+                if ($distance <= $delivery_radius) {
+                    $charge = 0; 
+                } else {
+                    if ($distance_ranges && $charge_ranges != 0) {
+                        // Add 0 at the beginning if not present
+                        if ($distance_ranges[0] != 0) {
+                            array_unshift($distance_ranges, 0);
+                            array_unshift($charge_ranges, 0);
+                        }
+                
+                        for ($i = 0; $i < count($distance_ranges) - 1; $i++) {
+                            if ($distance > $distance_ranges[$i] && $distance <= $distance_ranges[$i + 1]) {
+                                $charge = $charge_ranges[$i + 1]; // Charge corresponds to upper slab
+                                break;
+                            }
+                        }
+                
+                        if ($charge === 0 && $distance > end($distance_ranges)) {
+                            $charge = end($charge_ranges);
                         }
                     }
-                if ($charge === 0 && $distance >= $distance_ranges[count($distance_ranges) - 1]) {
-                    $charge = $charge_ranges[count($charge_ranges) - 1];
                 }
+                
+                
+                
             } else {
                 $charge = 0;
                 $distance = 0;
@@ -349,7 +428,7 @@ class ProductController extends BaseController
                 'location_id' => (int) $location_id,
                 'distance' => $distance,
                 'grant_total' => $grant_total,
-                'distance_charge' => $charge,
+                'distance_charge' => $charge ?? 0,
             ]);
 
             if ($location_id && $distance == null) {
@@ -367,7 +446,6 @@ class ProductController extends BaseController
             return $this->sendError([], $e->getMessage(), 500);
         }
     }
-
 
     public function removeCartItem($id)
     {
@@ -541,6 +619,7 @@ class ProductController extends BaseController
                 ]
             );
             event(new OrderPlacedEvent(auth()->user()->name));
+            
             return $this->sendResponse($order, 'Order placed successfully', 200);
         } catch (\Exception $e) {
             return $this->sendError([], $e->getMessage(), 500);
@@ -708,9 +787,10 @@ class ProductController extends BaseController
     public function coupons()
     {
         try {
-            $coupons = Coupon::all();
-
-            // Return success response with coupons data
+            // Fetch only coupons with status = 1
+            $coupons = Coupon::where('status', 1)->latest()->get();
+    
+            // Return success response with filtered coupons data
             return response()->json([
                 'success' => true,
                 'data' => $coupons
@@ -724,6 +804,7 @@ class ProductController extends BaseController
             ], 500);
         }
     }
+    
 
     public function productDetail($id)
     {
