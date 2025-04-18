@@ -50,12 +50,6 @@ class CategoryController extends Controller
                 ->orderBy('id', 'desc')
                 ->paginate($entries);
 
-            // Check if any categories were found
-            if ($categories->isEmpty()) {
-                // If no categories found, show an error message
-                Alert::error('Failed', 'Data Not Found.');
-                return redirect()->back(); // Redirect back to the previous page
-            }
 
             // If categories found, pass them to the view
             return view('admin.category.index', compact('categories'));
