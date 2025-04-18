@@ -113,6 +113,14 @@
         <i class="icon-user-follow menu-icon"></i>
       </a>
     </li>
+
+    <li class="nav-item {{ request()->routeIs('vendor*') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('vendor.index') }}">
+        <span class="menu-title">Vendors</span>
+        <i class="fa-solid fa-store menu-icon"></i>
+      </a>
+    </li>
+    
     <!-- <li class="nav-item nav-category"><span class="nav-link">Sample Pages</span></li> -->
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#auth1" aria-expanded="false" aria-controls="auth1">

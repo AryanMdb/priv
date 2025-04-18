@@ -27,7 +27,7 @@ use App\Http\Controllers\Admin\DeleteUserAccountController;
 use App\Http\Controllers\PHPMailerController;
 use App\Http\Controllers\Admin\MinimumOrderController;
 use App\Http\Controllers\Admin\CouponController;
-
+use App\Http\Controllers\Admin\VendorController;
 
 /*  
 |--------------------------------------------------------------------------
@@ -114,6 +114,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
     Route::any('/users/destroy/{id}', [UsersController::class, 'destroy'])->name('user.destroy');
     Route::post('/users/switch/toggle', [UsersController::class, 'switchToggle'])->name('user.switch.toggle');
     Route::post('/book/switch/toggle', [UsersController::class, 'switchToggleBook'])->name('book.switch.toggle');
+
+    // Vendor
+
+    Route::get('/vendor/index', [VendorController::class, 'index'])->name('vendor.index');
+    Route::get('/vendor/create', [VendorController::class, 'create'])->name('vendor.create');
+    Route::post('/vendor/store', [VendorController::class, 'store'])->name('vendor.store');
 
     // category
     Route::get('/category/list', [CategoryController::class, 'index'])->name('category.index');
