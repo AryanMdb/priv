@@ -77,30 +77,15 @@
         <i class="icon-magnifier menu-icon"></i>
       </a>
     </li>
-    <li class="nav-item <?php echo e(request()->routeIs('enquiry*') ? 'active' : ''); ?>">
-      <a class="nav-link" href="<?php echo e(route('enquiry.index')); ?>">
-        <span class="menu-title">Enquiries</span>
-        <i class="icon-phone menu-icon"></i>
-      </a>
-    </li>
+    
     <li class="nav-item <?php echo e(request()->routeIs('push_notification*') ? 'active' : ''); ?>">
       <a class="nav-link" href="<?php echo e(route('push_notification.index')); ?>">
         <span class="menu-title">Push Notifications</span>
         <i class="icon-speech menu-icon"></i>
       </a>
     </li>
-    <li class="nav-item <?php echo e(request()->routeIs('manage_forms*') ? 'active' : ''); ?>">
-      <a class="nav-link" href="<?php echo e(route('manage_forms.index')); ?>">
-        <span class="menu-title">Manage Forms</span>
-        <i class="icon-list menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item <?php echo e(request()->routeIs('delivery_charges.view') ? 'active' : ''); ?>">
-      <a class="nav-link" href="<?php echo e(route('delivery_charges.view')); ?>">
-        <span class="menu-title">Delivery Charges</span>
-        <i class="icon-rocket menu-icon"></i>
-      </a>
-    </li>
+    
+    
     <li class="nav-item <?php echo e(request()->routeIs('roles*') ? 'active' : ''); ?>">
       <a class="nav-link" href="<?php echo e(route('roles.index')); ?>">
         <span class="menu-title">Roles</span>
@@ -114,13 +99,6 @@
       </a>
     </li>
 
-    <li class="nav-item <?php echo e(request()->routeIs('vendor*') ? 'active' : ''); ?>">
-      <a class="nav-link" href="<?php echo e(route('vendor.index')); ?>">
-        <span class="menu-title">Vendors</span>
-        <i class="fa-solid fa-store menu-icon"></i>
-      </a>
-    </li>
-    
     <!-- <li class="nav-item nav-category"><span class="nav-link">Sample Pages</span></li> -->
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#auth1" aria-expanded="false" aria-controls="auth1">

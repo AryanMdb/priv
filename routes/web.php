@@ -41,8 +41,8 @@ use App\Http\Controllers\Admin\VendorController;
  */
 
 Route::get('/', function () {
-    return redirect()->route('admin');
-    //return view('welcome');
+    // return redirect()->route('admin');
+    return view('frontend/index');
 });
 
 Route::get('/admin', function () {

@@ -77,30 +77,30 @@
         <i class="icon-magnifier menu-icon"></i>
       </a>
     </li>
-    <li class="nav-item {{ request()->routeIs('enquiry*') ? 'active' : '' }}">
+    {{-- <li class="nav-item {{ request()->routeIs('enquiry*') ? 'active' : '' }}">
       <a class="nav-link" href="{{route('enquiry.index')}}">
         <span class="menu-title">Enquiries</span>
         <i class="icon-phone menu-icon"></i>
       </a>
-    </li>
+    </li> --}}
     <li class="nav-item {{ request()->routeIs('push_notification*') ? 'active' : '' }}">
       <a class="nav-link" href="{{route('push_notification.index')}}">
         <span class="menu-title">Push Notifications</span>
         <i class="icon-speech menu-icon"></i>
       </a>
     </li>
-    <li class="nav-item {{ request()->routeIs('manage_forms*') ? 'active' : '' }}">
+    {{-- <li class="nav-item {{ request()->routeIs('manage_forms*') ? 'active' : '' }}">
       <a class="nav-link" href="{{route('manage_forms.index')}}">
         <span class="menu-title">Manage Forms</span>
         <i class="icon-list menu-icon"></i>
       </a>
-    </li>
-    <li class="nav-item {{ request()->routeIs('delivery_charges.view') ? 'active' : '' }}">
+    </li> --}}
+    {{-- <li class="nav-item {{ request()->routeIs('delivery_charges.view') ? 'active' : '' }}">
       <a class="nav-link" href="{{route('delivery_charges.view')}}">
         <span class="menu-title">Delivery Charges</span>
         <i class="icon-rocket menu-icon"></i>
       </a>
-    </li>
+    </li> --}}
     <li class="nav-item {{ request()->routeIs('roles*') ? 'active' : '' }}">
       <a class="nav-link" href="{{route('roles.index')}}">
         <span class="menu-title">Roles</span>
@@ -114,13 +114,6 @@
       </a>
     </li>
 
-    <li class="nav-item {{ request()->routeIs('vendor*') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('vendor.index') }}">
-        <span class="menu-title">Vendors</span>
-        <i class="fa-solid fa-store menu-icon"></i>
-      </a>
-    </li>
-    
     <!-- <li class="nav-item nav-category"><span class="nav-link">Sample Pages</span></li> -->
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#auth1" aria-expanded="false" aria-controls="auth1">
